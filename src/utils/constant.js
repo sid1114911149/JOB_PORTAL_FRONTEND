@@ -4,7 +4,7 @@
 // export const APPLICATION_API_END_POINT="http://localhost:5000/application";
 // export const COMPANY_API_END_POINT="http://localhost:5000/company";
 // export const BASE_API_END_POINT="https://job-protal-backend-nbt4.onrender.com";
-export const BASE_API_END_POINT="http://localhost:5000";
+export const BASE_API_END_POINT="https://job-protal-backend-vh4d.onrender.com";
 export const USER_API_END_POINT=`${BASE_API_END_POINT}/user`;
 export const JOB_API_END_POINT=`${BASE_API_END_POINT}/job`;
 export const APPLICATION_API_END_POINT=`${BASE_API_END_POINT}/application`;
