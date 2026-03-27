@@ -3,7 +3,6 @@ import Navbar from '../shared/Navbar'
 import { RadioGroup } from '../ui/radio-group'
 import { Button } from '../ui/button'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
 import { USER_API_END_POINT } from '@/utils/constant'
 import { toast } from 'sonner'
 import { useDispatch, useSelector } from 'react-redux'
@@ -18,8 +17,10 @@ const Signup = () => {
         phoneNumber: "",
         password: "",
         role: "",
-        file: ""
+        profilePhoto: null,   // ✅ separate
+        resume: null          // ✅ new
     });
+
     const { loading, user } = useSelector(store => store.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -27,38 +28,56 @@ const Signup = () => {
     const changeEventHandler = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value });
     }
-    const changeFileHandler = (e) => {
-        setInput({ ...input, file: e.target.files?.[0] });
+
+    // ✅ handle profile photo
+    const changeProfileHandler = (e) => {
+        setInput({ ...input, profilePhoto: e.target.files?.[0] });
     }
+
+    // ✅ handle resume
+    const changeResumeHandler = (e) => {
+        setInput({ ...input, resume: e.target.files?.[0] });
+    }
+
     const submitHandler = async (e) => {
         e.preventDefault();
-        const formData = new FormData();    //formdata object
-        formData.append("fullname", input.fullname);
+
+        const formData = new FormData();
+        formData.append("fullName", input.fullname);
         formData.append("email", input.email);
-        formData.append("phoneNumber", input.phoneNumber);
+        formData.append("phoneNo", input.phoneNumber);
         formData.append("password", input.password);
         formData.append("role", input.role);
-        if (input.file) {
-            formData.append("file", input.file);
+
+        // ✅ append files correctly
+        if (input.profilePhoto) {
+            formData.append("profilePhoto", input.profilePhoto);
+        }
+
+        if (input.resume) {
+            formData.append("resume", input.resume);
         }
 
         try {
             dispatch(setLoading(true));
+
             const res = await fetch(`${USER_API_END_POINT}/register`, {
                 method: "POST",
                 body: formData,
             });
 
-            const data = await res.json(); // ✅ must convert
+            const data = await res.json();
 
             if (data.success) {
                 navigate("/login");
                 toast.success(data.message);
+            } else {
+                toast.error(data.message);
             }
 
         } catch (error) {
             console.log(error);
-            toast.error(error.response.data.message);
+            toast.error("Something went wrong");
         } finally {
             dispatch(setLoading(false));
         }
@@ -69,6 +88,7 @@ const Signup = () => {
             navigate("/");
         }
     }, [])
+
     return (
         <div>
             <div className="auth-container">
@@ -83,7 +103,6 @@ const Signup = () => {
                             value={input.fullname}
                             name="fullname"
                             onChange={changeEventHandler}
-                            placeholder="patel"
                         />
                     </div>
 
@@ -94,7 +113,6 @@ const Signup = () => {
                             value={input.email}
                             name="email"
                             onChange={changeEventHandler}
-                            placeholder="patel@gmail.com"
                         />
                     </div>
 
@@ -105,7 +123,6 @@ const Signup = () => {
                             value={input.phoneNumber}
                             name="phoneNumber"
                             onChange={changeEventHandler}
-                            placeholder="8080808080"
                         />
                     </div>
 
@@ -116,7 +133,6 @@ const Signup = () => {
                             value={input.password}
                             name="password"
                             onChange={changeEventHandler}
-                            placeholder="patel@gmail.com"
                         />
                     </div>
 
@@ -130,7 +146,6 @@ const Signup = () => {
                                     value="student"
                                     checked={input.role === "student"}
                                     onChange={changeEventHandler}
-                                    className="cursor-pointer"
                                 />
                                 <label>Student</label>
                             </div>
@@ -142,19 +157,28 @@ const Signup = () => {
                                     value="recruiter"
                                     checked={input.role === "recruiter"}
                                     onChange={changeEventHandler}
-                                    className="cursor-pointer"
                                 />
                                 <label>Recruiter</label>
                             </div>
                         </RadioGroup>
 
+                        {/* ✅ Profile Photo */}
                         <div className="profile-upload">
-                            <label>Profile</label>
+                            <label>Profile Photo-</label>
                             <input
                                 type="file"
                                 accept="image/*"
-                                onChange={changeFileHandler}
-                                className="cursor-pointer"
+                                onChange={changeProfileHandler}
+                            />
+                        </div>
+
+                        {/* ✅ Resume Upload */}
+                        <div className="profile-upload">
+                            <label>Resume(PDF)-</label>
+                            <input
+                                type="file"
+                                accept="application/pdf"
+                                onChange={changeResumeHandler}
                             />
                         </div>
 
@@ -186,4 +210,4 @@ const Signup = () => {
     )
 }
 
-export default Signup
+export default Signup;

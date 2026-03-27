@@ -20,18 +20,21 @@ const ApplicantsTable = () => {
   const statusHandler = async (status, id) => {
     try {
       const token = localStorage.getItem("token");
-
+      
       const res = await fetch(
         `${APPLICATION_API_END_POINT}/update/${id}`,
         {
-          method: "POST", status, headers: {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json", 
             Authorization: `Bearer ${token}`,
           },
+          body: JSON.stringify({ status:status })
         }
       );
-
-      if (res.data.success) {
-        toast.success(res.data.message);
+      const data=await res.json();
+      if (data.success) {
+        toast.success(data.message);
 
         // 🔥 Update UI instantly (no reload)
         const updatedApplications = applicants.applications.map(app =>
@@ -72,7 +75,7 @@ const ApplicantsTable = () => {
               applicants.applications.map((item) => (
                 <TableRow key={item._id} className="table-body-row">
                   <TableCell className="table-cell">
-                    {item?.applicant?.fullname}
+                    {item?.applicant?.fullName}
                   </TableCell>
 
                   <TableCell className="table-cell">
@@ -80,7 +83,7 @@ const ApplicantsTable = () => {
                   </TableCell>
 
                   <TableCell className="table-cell">
-                    {item?.applicant?.phoneNumber}
+                    {item?.applicant?.phoneNo}
                   </TableCell>
 
                   <TableCell className="table-cell">

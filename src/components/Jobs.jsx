@@ -27,16 +27,19 @@ const Jobs = () => {
     return (
         <div>
             <div className="browse-container">
+
                 <div className="browse-layout">
 
+                    {/* ✅ LEFT SIDEBAR */}
                     <div className="filter-sidebar">
                         <FilterCard />
                     </div>
 
-                    {filterJobs.length <= 0 ? (
-                        <span className="no-jobs">Job not found</span>
-                    ) : (
-                        <div className="job-section">
+                    {/* ✅ RIGHT JOB SECTION */}
+                    <div className="job-section">
+                        {filterJobs.length <= 0 ? (
+                            <span className="no-jobs">Job not found</span>
+                        ) : (
                             <div className="job-grid">
                                 {filterJobs.map((job) => (
                                     <motion.div
@@ -50,14 +53,15 @@ const Jobs = () => {
                                     </motion.div>
                                 ))}
                             </div>
-                        </div>
-                    )}
+                        )}
+                    </div>
+
 
                 </div>
             </div>
 
 
-        </div>
+        </div >
     )
 }
 
